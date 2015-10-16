@@ -2,6 +2,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -15,10 +16,23 @@ import javax.swing.JFileChooser;
  */
 public class NeuralNetwork extends javax.swing.JFrame {
 
-    private List<Neuron> neuronList = new ArrayList<Neuron>();
+    private List<InputData> InputList = new ArrayList<InputData>();
     private File selectedFile;
     private String sFile;
     private JFileChooser fc = new JFileChooser();
+    private Neuron America;
+    private Neuron Africa;
+    private Neuron Antarctica;
+    private Neuron Asia;
+    private Neuron Austrailia;
+    private Neuron Europe;
+    private Neuron Arctic;
+    private Neuron Atlantic;
+    private Neuron Indian;
+    private Neuron Pacific;
+    private double threshold = 0.5;
+    private double learningRate = 0.5;
+    private double correct = 1.0;
     
     public NeuralNetwork() {
         initComponents();
@@ -125,7 +139,7 @@ public class NeuralNetwork extends javax.swing.JFrame {
     
     public void readFile(File Selected)throws IOException{
         Scanner scan = new Scanner(selectedFile);
-        Neuron nTemp = new Neuron();
+        InputData nTemp = new InputData();
         int count1 = 0;
         double indata = 0.0;
         while(scan.hasNext()){
@@ -142,12 +156,62 @@ public class NeuralNetwork extends javax.swing.JFrame {
             count1++;
             if(count1 > 2){
                 count1 = 0;
-                neuronList.add(nTemp);
-                nTemp = new Neuron();
+                InputList.add(nTemp);
+                nTemp = new InputData();
             }
         }
     }
+    
+    public void performNetwork(List<InputData> n1){
+        Iterator iter = n1.iterator();
+        int count = 0, a, output;
+        double weight = 1.0;
+        List<InputData> ne = new ArrayList<InputData>();
+        InputData n = new InputData();
+        while(iter.hasNext()){
+            
+            output = calculateOutput(n1.get(count).getLatitude(), n1.get(count).getLongitude(), Antarctica.getLatitudeWeight(), Antarctica.getLongitudeWeight());
+            Antarctica.setLatitudeWeight(calculateWeight(Antarctica.getLatitudeWeight(), learningRate, correct, output, n1.get(count).getLatitude()));
+            Antarctica.setLongitudeWeight(calculateWeight(Antarctica.getLongitudeWeight(), learningRate, correct, output, n1.get(count).getLongitude()));
+            
+            /*
+            if(n1.get(count).getLocation().equals("Africa"))
+                a = count;
+            if(n1.get(count).getLocation().equals("America"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Antarctica"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Asia"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Austrailia"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Europe"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Arctic"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Atlantic"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Indian"))
+                a = count;
+            if(n1.get(count).getLocation().equals("Pacific"))
+                a = count;
+            */
+            count++;
+            iter.next();
+        }
+    }
+    
+    public int calculateOutput(double latitude, double longitude, double latitudeWeight, double longitudeWeight){
+        double temp = (latitude * latitudeWeight) + (longitude * longitudeWeight);
+        if (temp >= threshold)
+            return 1;
+        else 
+            return 0;
+    }
 
+    public double calculateWeight(double currentWeight, double learningRate, double correct, int output, double input){
+        return currentWeight + learningRate*(correct - output)*input;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton openFile;
