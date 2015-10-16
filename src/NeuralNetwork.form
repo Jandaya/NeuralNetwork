@@ -51,7 +51,13 @@
                   <Component id="openTestSetButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
-              <Group type="102" attributes="0">
+              <Component id="scrollPane" alignment="0" max="32767" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="printButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="learningRateLabel" min="-2" max="-2" attributes="0"/>
@@ -59,23 +65,18 @@
                   </Group>
                   <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="learningRateField" min="-2" pref="90" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="performNetworkButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="220" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="epochField" min="-2" pref="90" max="-2" attributes="0"/>
-                          <EmptySpace pref="243" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="learningRateField" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                              <Component id="epochField" min="-2" pref="90" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
-              </Group>
-              <Component id="scrollPane" alignment="0" max="32767" attributes="0"/>
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="performNetworkButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="printButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -97,11 +98,10 @@
                       <Component id="epochField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="epochLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="64" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="printButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="performNetworkButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="performNetworkButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="23" max="32767" attributes="0"/>
+                  <Component id="printButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="scrollPane" min="-2" pref="212" max="-2" attributes="0"/>
               </Group>
