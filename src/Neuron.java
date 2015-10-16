@@ -11,9 +11,9 @@
 public class Neuron {
     private double latitude;
     private double longitude;
-    
     private double latitudeWeight;
     private double longitudeWeight;
+    private int correct;
     
     private String location;
     
@@ -23,14 +23,25 @@ public class Neuron {
         location = "";
         latitudeWeight = 1.0;
         longitudeWeight = 1.0;
+        correct = 0;
     }
     
-    public Neuron(double lat, double lon, String loc, double law, double low){
+    public Neuron(String loc){
+        latitude = 0.0;
+        longitude = 0.0;
+        location = loc;
+        latitudeWeight = 1.0;
+        longitudeWeight = 1.0;
+        correct = 0;
+    }
+    
+    public Neuron(double lat, double lon, String loc, double law, double low, int cor){
         latitude = lat;
         longitude = lon;
         location = loc;
         latitudeWeight = law;
         longitudeWeight = low;
+        correct = cor;
     }
     
     
@@ -54,6 +65,10 @@ public class Neuron {
         longitudeWeight = b;
     }
     
+    public void setCorrect(int c){
+        correct = c;
+    }
+    
     public double getLatitude(){
         return latitude;
     }
@@ -69,5 +84,9 @@ public class Neuron {
     }
     public double getLongitudeWeight(){
         return longitudeWeight;
+    }
+    
+    public int getCorrect(){
+        return correct;
     }
 }

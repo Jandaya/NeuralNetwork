@@ -33,6 +33,7 @@ public class NeuralNetwork extends javax.swing.JFrame {
     private double threshold = 0.5;
     private double learningRate = 0.5;
     private int correct = 1;
+    private int epoch;
     
     public NeuralNetwork() {
         initComponents();
@@ -45,9 +46,14 @@ public class NeuralNetwork extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         openFile = new javax.swing.JButton();
         printButton = new javax.swing.JButton();
-        performNetorkButton = new javax.swing.JButton();
+        performNetworkButton = new javax.swing.JButton();
+        learningRateField = new javax.swing.JTextField();
+        epochField = new javax.swing.JTextField();
+        learningRateLabel = new javax.swing.JLabel();
+        epochLabel = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
+        openTestSetButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,30 +67,64 @@ public class NeuralNetwork extends javax.swing.JFrame {
         });
 
         printButton.setText("Print");
+        printButton.setEnabled(false);
         printButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printButtonActionPerformed(evt);
             }
         });
 
-        performNetorkButton.setText("Perform Network");
-        performNetorkButton.addActionListener(new java.awt.event.ActionListener() {
+        performNetworkButton.setText("Perform Network");
+        performNetworkButton.setEnabled(false);
+        performNetworkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                performNetorkButtonActionPerformed(evt);
+                performNetworkButtonActionPerformed(evt);
             }
         });
+
+        learningRateField.setText("0.5");
+
+        epochField.setText("1");
+
+        learningRateLabel.setText("Learning Rate:");
+
+        epochLabel.setText("# of epochs:");
+
+        textArea.setColumns(20);
+        textArea.setRows(5);
+        scrollPane.setViewportView(textArea);
+
+        openTestSetButton.setText("Open Test File");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(299, Short.MAX_VALUE)
-                .addComponent(performNetorkButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(printButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
                 .addComponent(openFile)
+                .addGap(18, 18, 18)
+                .addComponent(openTestSetButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(128, 128, 128)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(learningRateLabel)
+                    .addComponent(epochLabel))
+                .addGap(44, 44, 44)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(epochField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(243, Short.MAX_VALUE))))
+            .addComponent(scrollPane)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(performNetworkButton)
+                .addGap(18, 18, 18)
+                .addComponent(printButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -93,29 +133,34 @@ public class NeuralNetwork extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(openFile)
+                    .addComponent(openTestSetButton))
+                .addGap(55, 55, 55)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(learningRateLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(epochField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(epochLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(printButton)
-                    .addComponent(performNetorkButton))
-                .addContainerGap(225, Short.MAX_VALUE))
+                    .addComponent(performNetworkButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        textArea.setColumns(20);
-        textArea.setRows(5);
-        scrollPane.setViewportView(textArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(scrollPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -136,6 +181,8 @@ public class NeuralNetwork extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
             }
+            printButton.setEnabled(true);
+            performNetworkButton.setEnabled(true);
         }
     }//GEN-LAST:event_openFileActionPerformed
 
@@ -144,10 +191,10 @@ public class NeuralNetwork extends javax.swing.JFrame {
         printInput(InputList);
     }//GEN-LAST:event_printButtonActionPerformed
 
-    private void performNetorkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performNetorkButtonActionPerformed
+    private void performNetworkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performNetworkButtonActionPerformed
         // TODO add your handling code here:
         performNetwork(InputList);
-    }//GEN-LAST:event_performNetorkButtonActionPerformed
+    }//GEN-LAST:event_performNetworkButtonActionPerformed
 
     public static void main(String args[]) {
 
@@ -351,9 +398,14 @@ public class NeuralNetwork extends javax.swing.JFrame {
         return currentWeight + learningRate * (correct - output)*input;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField epochField;
+    private javax.swing.JLabel epochLabel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField learningRateField;
+    private javax.swing.JLabel learningRateLabel;
     private javax.swing.JButton openFile;
-    private javax.swing.JButton performNetorkButton;
+    private javax.swing.JButton openTestSetButton;
+    private javax.swing.JButton performNetworkButton;
     private javax.swing.JButton printButton;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTextArea textArea;
