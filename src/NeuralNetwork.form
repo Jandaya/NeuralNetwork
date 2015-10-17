@@ -44,13 +44,6 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="openFile" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="openTestSetButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
               <Component id="scrollPane" alignment="0" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
@@ -58,30 +51,36 @@
                       <Component id="learningRateLabel" min="-2" max="-2" attributes="0"/>
                       <Component id="epochLabel" min="-2" max="-2" attributes="0"/>
                       <Component id="thresholdLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="randomBox" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="performNetworkButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="testButton" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="learningRateField" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
-                                  <Component id="epochField" min="-2" pref="90" max="-2" attributes="0"/>
-                                  <Component id="thresholdField" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
-                              </Group>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="testButton" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="learningRateField" alignment="0" pref="90" max="32767" attributes="0"/>
+                              <Component id="epochField" pref="90" max="32767" attributes="0"/>
+                              <Component id="thresholdField" alignment="0" pref="90" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="234" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="performNetworkButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-              </Group>
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="80" max="32767" attributes="0"/>
                   <Component id="printButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="openFile" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="openTestSetButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="trainingFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="testFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -96,7 +95,11 @@
                               <Component id="openTestSetButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="testButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="trainingFileLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="testFileLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="learningRateField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="learningRateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -111,9 +114,12 @@
                       </Group>
                       <Component id="epochLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="performNetworkButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="performNetworkButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="randomBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="37" max="32767" attributes="0"/>
                   <Component id="printButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="scrollPane" min="-2" pref="212" max="-2" attributes="0"/>
@@ -141,7 +147,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="performNetworkButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Perform Network"/>
+            <Property name="text" type="java.lang.String" value="Learn!"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -196,6 +202,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Test"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testButtonActionPerformed"/>
@@ -209,6 +216,22 @@
         <Component class="javax.swing.JLabel" name="thresholdLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Threshold:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="randomBox">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" value="Random Weights?"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="trainingFileLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Training file: "/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="testFileLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Test file: "/>
           </Properties>
         </Component>
       </SubComponents>

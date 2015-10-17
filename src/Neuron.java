@@ -14,6 +14,10 @@ public class Neuron {
     private double latitudeWeight;
     private double longitudeWeight;
     private int correct;
+    private int numCorrect;
+    private int numFires;
+    private int numMisfires;
+    private int nono;
     
     private String location;
     
@@ -24,6 +28,10 @@ public class Neuron {
         latitudeWeight = 1.0;
         longitudeWeight = 1.0;
         correct = 0;
+        numCorrect = 0;
+        numFires = 0;
+        numMisfires = 0;
+        nono = 0;
     }
     
     public Neuron(String loc){
@@ -33,6 +41,10 @@ public class Neuron {
         latitudeWeight = 1.0;
         longitudeWeight = 1.0;
         correct = 0;
+        numCorrect = 0;
+        numFires = 0;
+        numMisfires = 0;
+        nono = 0;
     }
     
     public Neuron(double lat, double lon, String loc, double law, double low, int cor){
@@ -44,7 +56,52 @@ public class Neuron {
         correct = cor;
     }
     
+    public int getNoNo(){
+        return nono;
+    }
     
+    public void iterateNoNo(){
+        nono++;
+    }
+    
+    public void setNoNo(int no){
+        nono = no;
+    }
+    
+    public void iterateMisfires(){
+        numMisfires++;
+    }
+    
+    public int getNumMisfires(){
+        return numMisfires;
+    }
+    
+    public void setNumMisfires(int m){
+        numMisfires = m;
+    }
+    
+    public void iterateFires(){
+        numFires++;
+    }
+    
+    public void setNumFires(int f){
+        numFires = f;
+    }
+    
+    public int getNumFires(){
+        return numFires;
+    }
+    
+    public void iterateCorrect(){
+        numCorrect++;
+    }
+    
+    public void setNumCorrect(int n){
+        numCorrect = n;
+    }
+    public int getNumCorrect(){
+        return numCorrect;
+    }
     public void setLatitude(double lat){
         latitude = lat;
     }
