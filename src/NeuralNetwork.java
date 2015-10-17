@@ -17,6 +17,7 @@ import javax.swing.JFileChooser;
 public class NeuralNetwork extends javax.swing.JFrame {
 
     private List<InputData> InputList = new ArrayList<InputData>();
+    private List<InputData> testList = new ArrayList<InputData>();
     private File selectedFile;
     private String sFile;
     private JFileChooser fc = new JFileChooser();
@@ -30,10 +31,12 @@ public class NeuralNetwork extends javax.swing.JFrame {
     private Neuron Atlantic = new Neuron("Atlantic");
     private Neuron Indian = new Neuron("Indian");
     private Neuron Pacific = new Neuron("Pacific");
+    private List<Neuron> NeuronList = new ArrayList<Neuron>();
     private double threshold = 0.5;
     private double learningRate = 0.5;
     private int correct = 1;
-    private int epoch;
+    private int epoch = 0;
+    private int numOfDataLines = 0;
     
     public NeuralNetwork() {
         initComponents();
@@ -54,6 +57,9 @@ public class NeuralNetwork extends javax.swing.JFrame {
         scrollPane = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
         openTestSetButton = new javax.swing.JButton();
+        testButton = new javax.swing.JButton();
+        thresholdField = new javax.swing.JTextField();
+        thresholdLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -95,6 +101,24 @@ public class NeuralNetwork extends javax.swing.JFrame {
         scrollPane.setViewportView(textArea);
 
         openTestSetButton.setText("Open Test File");
+        openTestSetButton.setEnabled(false);
+        openTestSetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openTestSetButtonActionPerformed(evt);
+            }
+        });
+
+        testButton.setText("Test");
+        testButton.setToolTipText("");
+        testButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testButtonActionPerformed(evt);
+            }
+        });
+
+        thresholdField.setText("0.5");
+
+        thresholdLabel.setText("Threshold:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -107,44 +131,54 @@ public class NeuralNetwork extends javax.swing.JFrame {
                 .addComponent(openTestSetButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(scrollPane)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(printButton)
-                .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(128, 128, 128)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(learningRateLabel)
-                    .addComponent(epochLabel))
+                    .addComponent(epochLabel)
+                    .addComponent(thresholdLabel))
                 .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(performNetworkButton)
-                        .addGap(0, 220, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(epochField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(testButton)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(epochField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(thresholdField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(234, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(printButton)
+                .addGap(26, 26, 26))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(openFile)
-                    .addComponent(openTestSetButton))
-                .addGap(55, 55, 55)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(learningRateLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(epochField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(openFile)
+                            .addComponent(openTestSetButton)
+                            .addComponent(testButton))
+                        .addGap(55, 55, 55)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(learningRateLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(thresholdField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(thresholdLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(epochField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(epochLabel))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(performNetworkButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(printButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -166,6 +200,44 @@ public class NeuralNetwork extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void testButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testButtonActionPerformed
+        // TODO add your handling code here:
+        calculatePerfectFire(testList, NeuronList);
+    }//GEN-LAST:event_testButtonActionPerformed
+
+    private void openTestSetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTestSetButtonActionPerformed
+        // TODO add your handling code here:
+        int returnVal = fc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            // clear the list for new file
+            selectedFile  = fc.getSelectedFile();
+            sFile = selectedFile.toString();
+            try {
+                // input in stuff
+                readFile(selectedFile, testList);
+
+            } catch (IOException ex) {
+                Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //printInput(testList);
+
+        }
+    }//GEN-LAST:event_openTestSetButtonActionPerformed
+
+    private void performNetworkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performNetworkButtonActionPerformed
+        // TODO add your handling code here:
+        epoch = Integer.parseInt(epochField.getText());
+        learningRate = Double.parseDouble(learningRateField.getText());
+        threshold = Double.parseDouble(thresholdField.getText());
+        performNetwork(InputList, NeuronList);
+    }//GEN-LAST:event_performNetworkButtonActionPerformed
+
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
+        // TODO add your handling code here:
+        printInput(InputList);
+    }//GEN-LAST:event_printButtonActionPerformed
+
     private void openFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileActionPerformed
         // TODO add your handling code here:
         int returnVal = fc.showOpenDialog(null);
@@ -176,25 +248,17 @@ public class NeuralNetwork extends javax.swing.JFrame {
             sFile = selectedFile.toString();
             try {
                 // input in stuff
-                readFile(selectedFile);
-                
+                readFile(selectedFile, InputList);
+
             } catch (IOException ex) {
                 Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
             }
             printButton.setEnabled(true);
             performNetworkButton.setEnabled(true);
+            openTestSetButton.setEnabled(true);
+            addNeurons();
         }
     }//GEN-LAST:event_openFileActionPerformed
-
-    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
-        // TODO add your handling code here:
-        printInput(InputList);
-    }//GEN-LAST:event_printButtonActionPerformed
-
-    private void performNetworkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performNetworkButtonActionPerformed
-        // TODO add your handling code here:
-        performNetwork(InputList);
-    }//GEN-LAST:event_performNetworkButtonActionPerformed
 
     public static void main(String args[]) {
 
@@ -227,8 +291,8 @@ public class NeuralNetwork extends javax.swing.JFrame {
         });
     }
     
-    public void readFile(File Selected)throws IOException{
-        Scanner scan = new Scanner(selectedFile);
+    public void readFile(File Selected, List<InputData> id)throws IOException{
+        Scanner scan = new Scanner(Selected);
         InputData nTemp = new InputData();
         int count1 = 0;
         double indata = 0.0;
@@ -246,98 +310,177 @@ public class NeuralNetwork extends javax.swing.JFrame {
             count1++;
             if(count1 > 2){
                 count1 = 0;
-                InputList.add(nTemp);
+                id.add(nTemp);
                 nTemp = new InputData();
             }
         }
     }
     
-    public void performNetwork(List<InputData> n1){
-        Iterator iter = n1.iterator();
-        int i = 0, a, output;
+    public void testNetwork(List<InputData> id, List<Neuron> ne){
+        Iterator iter = id.iterator();
+        Iterator itne = ne.iterator();
+        int i = 0, j = 0, a, output, iterationCount = 0;
         double weight = 1.0;
+        int AfricaCount=0, AmericaCount=0;
+        int AfricaCorrectFire = 0;
         while(iter.hasNext()){
-            
-            if(n1.get(i).getLocation().equals("Africa")){
-                Africa.setCorrect(1);
+            while(itne.hasNext()){
+                output = calculateOutput(id.get(i).getLatitude(), id.get(i).getLongitude(), ne.get(j).getLatitudeWeight(), ne.get(j).getLongitudeWeight());
+                if(output == 1){
+                    if(ne.get(j).getLocation().equals(id.get(i).getLocation())){
+                        
+                    }
+                }
             }
-            else if(n1.get(i).getLocation().equals("America")){
-                America.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Antarctica")){
-                Antarctica.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Asia")){
-                Asia.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Austrailia")){
-                Austrailia.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Europe")){
-                Europe.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Arctic")){
-                Arctic.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Atlantic")){
-                Atlantic.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Indian")){
-                Indian.setCorrect(1);
-            }
-            else if(n1.get(i).getLocation().equals("Pacific")){
-                Pacific.setCorrect(1);
-            }
-            
-            
-            
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Africa.getLatitudeWeight(), Africa.getLongitudeWeight());
-            Africa.setLatitudeWeight(calculateWeight(Africa.getLatitudeWeight(), learningRate, Africa.getCorrect(), output, n1.get(i).getLatitude()));
-            Africa.setLongitudeWeight(calculateWeight(Africa.getLongitudeWeight(), learningRate, Africa.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), America.getLatitudeWeight(), America.getLongitudeWeight());
-            America.setLatitudeWeight(calculateWeight(America.getLatitudeWeight(), learningRate, America.getCorrect(), output, n1.get(i).getLatitude()));
-            America.setLongitudeWeight(calculateWeight(America.getLongitudeWeight(), learningRate, America.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Antarctica.getLatitudeWeight(), Antarctica.getLongitudeWeight());
-            Antarctica.setLatitudeWeight(calculateWeight(Antarctica.getLatitudeWeight(), learningRate, Antarctica.getCorrect(), output, n1.get(i).getLatitude()));
-            Antarctica.setLongitudeWeight(calculateWeight(Antarctica.getLongitudeWeight(), learningRate, Antarctica.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Asia.getLatitudeWeight(), Asia.getLongitudeWeight());
-            Asia.setLatitudeWeight(calculateWeight(Asia.getLatitudeWeight(), learningRate, Asia.getCorrect(), output, n1.get(i).getLatitude()));
-            Asia.setLongitudeWeight(calculateWeight(Asia.getLongitudeWeight(), learningRate, Asia.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Austrailia.getLatitudeWeight(), Austrailia.getLongitudeWeight());
-            Austrailia.setLatitudeWeight(calculateWeight(Austrailia.getLatitudeWeight(), learningRate, Austrailia.getCorrect(), output, n1.get(i).getLatitude()));
-            Austrailia.setLongitudeWeight(calculateWeight(Austrailia.getLongitudeWeight(), learningRate, Austrailia.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Europe.getLatitudeWeight(), Europe.getLongitudeWeight());
-            Europe.setLatitudeWeight(calculateWeight(Europe.getLatitudeWeight(), learningRate, Europe.getCorrect(), output, n1.get(i).getLatitude()));
-            Europe.setLongitudeWeight(calculateWeight(Europe.getLongitudeWeight(), learningRate, Europe.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Arctic.getLatitudeWeight(), Arctic.getLongitudeWeight());
-            Arctic.setLatitudeWeight(calculateWeight(Arctic.getLatitudeWeight(), learningRate, Arctic.getCorrect(), output, n1.get(i).getLatitude()));
-            Arctic.setLongitudeWeight(calculateWeight(Arctic.getLongitudeWeight(), learningRate, Arctic.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Atlantic.getLatitudeWeight(), Atlantic.getLongitudeWeight());
-            Atlantic.setLatitudeWeight(calculateWeight(Atlantic.getLatitudeWeight(), learningRate, Atlantic.getCorrect(), output, n1.get(i).getLatitude()));
-            Atlantic.setLongitudeWeight(calculateWeight(Atlantic.getLongitudeWeight(), learningRate, Atlantic.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Indian.getLatitudeWeight(), Indian.getLongitudeWeight());
-            Indian.setLatitudeWeight(calculateWeight(Indian.getLatitudeWeight(), learningRate, Indian.getCorrect(), output, n1.get(i).getLatitude()));
-            Indian.setLongitudeWeight(calculateWeight(Indian.getLongitudeWeight(), learningRate, Indian.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), Pacific.getLatitudeWeight(), Pacific.getLongitudeWeight());
-            Pacific.setLatitudeWeight(calculateWeight(Pacific.getLatitudeWeight(), learningRate, Pacific.getCorrect(), output, n1.get(i).getLatitude()));
-            Pacific.setLongitudeWeight(calculateWeight(Pacific.getLongitudeWeight(), learningRate, Pacific.getCorrect(), output, n1.get(i).getLongitude()));
-            
-            
-            resetCorrect();
+            j = 0;
+            itne = ne.iterator();
             i++;
             iter.next();
         }
+        numOfDataLines = i;
+    }
+    
+    public String getCorrectLocation(){
         
+        return "";
+    }
+   
+    
+    public void calculatePerfectFire(List<InputData> n1, List<Neuron> ne){
+        Iterator iter = n1.iterator();
+        Iterator itne = ne.iterator();
+        int i = 0, j = 0, a, AfricaOutput, iterationCount = 0, output = 0, perfect = 0, noFire = 0, multipleFire = 0, overallOutput = 0;
+        double weight = 1.0;
+        int fire = 0, correctFire = 0;
+        String outputLocation;
+        while(iter.hasNext()){
+            while(itne.hasNext()){
+                output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), ne.get(j).getLatitudeWeight(), ne.get(j).getLongitudeWeight());
+                //textArea.append("\ninputLocation: " + n1.get(i).getLocation() + " OutputLocation: " + ne.get(j).getLocation() + " Output: " + output);
+                if(output == 0 && ne.get(j).getLocation().equals(n1.get(i).getLocation()))
+                    ne.get(j).iterateMisfires();
+                if(output == 0 && !(ne.get(j).getLocation().equals(n1.get(i).getLocation())))
+                    ne.get(j).iterateNoNo();
+                if (output == 1){
+                    fire++;
+                    ne.get(j).iterateFires();
+                    if(ne.get(j).getLocation().equals(n1.get(i).getLocation())){
+                       correctFire++;
+                       ne.get(j).iterateCorrect();
+                    }
+                }
+                j++;
+                itne.next();
+            }
+            
+            if(fire == correctFire && fire > 0)
+                perfect++;
+            else if(fire >= 1)
+                multipleFire++;
+            else if(fire < 1)
+                noFire++;
+            
+            
+            itne = ne.iterator();
+            j = 0;
+            output = 0; 
+            fire = 0; 
+            correctFire = 0;
+            i++;
+            iter.next();
+        }
+        textArea.append("\nAfrica Perfect fire percentage: " + calculatePercentage(ne.get(0).getNumCorrect(), i) + "%");
+        textArea.append("\nPerfect fire percentage: " + calculatePercentage(perfect, i) + "%");
+        textArea.append("\nNo fire percentage: " + calculatePercentage(noFire, i)+ "%");
+        textArea.append("\nMultiple fire percentage: " + calculatePercentage(multipleFire, i)+ "%");
+        textArea.append("\nNumber of perfect counts: " + perfect + " | " + "Number overall: " + i);
+        printStatistics(ne, i);
+    }
+    
+    public void printStatistics(List<Neuron> n, int num){
+        Iterator in = n.iterator();
+        int i = 0, numShouldntFire = 0;
+        while(in.hasNext()){
+            textArea.append("\n\n" + n.get(i).getLocation() + ": ");
+            textArea.append("\nPercentage correct Fires: " + calculatePercentage(n.get(i).getNumCorrect(), num) + "%");
+            textArea.append("\nTrue Negatives: " + calculatePercentage(n.get(i).getNoNo(), num) + "%");
+            numShouldntFire = n.get(i).getNumFires() - n.get(i).getNumCorrect();
+            //textArea.append("\nPercentage overall Fires: " + calculatePercentage(n.get(i).getNumFires(), num) + "%");
+            textArea.append("\nPercentage incorrect Fires: " + calculatePercentage(numShouldntFire, num) + "%");
+            textArea.append("\nPercentage Misfires: " + calculatePercentage(n.get(i).getNumMisfires(), num) + "%");
+
+            i++;
+            in.next();
+        }
+    }
+    public double calculatePercentage(int num, int total){
+        double temp = ((double)num / (double)total) * 100.0;
+        temp = Math.round(temp * 100.0) / 100.0;
+        return temp;
+    }
+    public void setCorrect(InputData n){
+            if(n.getLocation().equals("Africa")){
+                Africa.setCorrect(1);
+            }
+            else if(n.getLocation().equals("America")){
+                America.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Antarctica")){
+                Antarctica.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Asia")){
+                Asia.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Austrailia")){
+                Austrailia.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Europe")){
+                Europe.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Arctic")){
+                Arctic.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Atlantic")){
+                Atlantic.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Indian")){
+                Indian.setCorrect(1);
+            }
+            else if(n.getLocation().equals("Pacific")){
+                Pacific.setCorrect(1);
+            }
+    }
+    
+    public void performNetwork(List<InputData> n1, List<Neuron> ne){
+        Iterator iter = n1.iterator();
+        Iterator itne = ne.iterator();
+        int i = 0, j = 0, a, output, count = 0;
+        double weight = 1.0;
+        while(count < epoch){
+            while(iter.hasNext()){
+                while(itne.hasNext()){
+                    if(n1.get(i).getLocation().equals(ne.get(j).getLocation()))
+                        ne.get(j).setCorrect(1);
+
+                    output = calculateOutput(n1.get(i).getLatitude(), n1.get(i).getLongitude(), ne.get(j).getLatitudeWeight(), ne.get(j).getLongitudeWeight());
+                    ne.get(j).setLatitudeWeight(calculateWeight(ne.get(j).getLatitudeWeight(), learningRate, ne.get(j).getCorrect(), output, n1.get(i).getLatitude()));
+                    ne.get(j).setLongitudeWeight(calculateWeight(ne.get(j).getLongitudeWeight(), learningRate, ne.get(j).getCorrect(), output, n1.get(i).getLongitude()));
+                    j++;
+                    itne.next();
+                }
+                j = 0;
+                itne = ne.iterator();
+
+                resetCorrect2(ne);
+                i++;
+                iter.next();
+            }
+            i = 0;
+            iter = n1.iterator();
+            count++;
+        }
+        displayNeurons(ne);
+        /*
         printWeight(Africa);
         printWeight(America);
         printWeight(Antarctica);
@@ -348,7 +491,7 @@ public class NeuralNetwork extends javax.swing.JFrame {
         printWeight(Atlantic);
         printWeight(Indian);
         printWeight(Pacific);
-        
+        */
 
     }
     
@@ -365,8 +508,39 @@ public class NeuralNetwork extends javax.swing.JFrame {
         Atlantic.setCorrect(0);
     }
     
-    public void setWeights(){
+    
+    public void resetCorrect2(List<Neuron> n){
+        Iterator iter = n.iterator();
+        int i = 0;
+        while(iter.hasNext()){
+            n.get(i).setCorrect(0);
+            i++;
+            iter.next();
+        }
         
+    }
+    
+    public void displayNeurons(List<Neuron> n){
+        Iterator iter = n.iterator();
+        int i = 0;
+        while(iter.hasNext()){
+            textArea.append("\n" + n.get(i).getLocation() + ": ");
+            textArea.append("Lat Weight: " + n.get(i).getLatitudeWeight() + " | " + "Lon Weight: " + n.get(i).getLongitudeWeight() + "\n");            i++;
+            iter.next();
+        }
+    }
+    
+    public void addNeurons(){
+        NeuronList.add(Africa);
+        NeuronList.add(America);
+        NeuronList.add(Antarctica);
+        NeuronList.add(Asia);
+        NeuronList.add(Austrailia);
+        NeuronList.add(Europe);
+        NeuronList.add(Arctic);
+        NeuronList.add(Atlantic);
+        NeuronList.add(Indian);
+        NeuronList.add(Pacific);
     }
     
     public void printWeight(Neuron a){
@@ -408,6 +582,9 @@ public class NeuralNetwork extends javax.swing.JFrame {
     private javax.swing.JButton performNetworkButton;
     private javax.swing.JButton printButton;
     private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JButton testButton;
     private javax.swing.JTextArea textArea;
+    private javax.swing.JTextField thresholdField;
+    private javax.swing.JLabel thresholdLabel;
     // End of variables declaration//GEN-END:variables
 }
