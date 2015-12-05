@@ -39,6 +39,7 @@ public class NeuralNetwork extends javax.swing.JFrame {
     private double learningRate = 0.5;
     private int correct = 1;
     private int epoch = 0;
+    private boolean weightsLoaded = false;
     
     public NeuralNetwork() {
         initComponents();
@@ -65,6 +66,8 @@ public class NeuralNetwork extends javax.swing.JFrame {
         randomBox = new javax.swing.JCheckBox();
         trainingFileLabel = new javax.swing.JLabel();
         testFileLabel = new javax.swing.JLabel();
+        openWeightsButton = new javax.swing.JButton();
+        weightLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -133,6 +136,15 @@ public class NeuralNetwork extends javax.swing.JFrame {
 
         testFileLabel.setText("Test file: ");
 
+        openWeightsButton.setText("Open Weights File");
+        openWeightsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openWeightsButtonActionPerformed(evt);
+            }
+        });
+
+        weightLabel.setText("Weights File:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -163,9 +175,12 @@ public class NeuralNetwork extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(openFile)
                         .addGap(18, 18, 18)
-                        .addComponent(openTestSetButton))
+                        .addComponent(openTestSetButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(openWeightsButton))
                     .addComponent(trainingFileLabel)
-                    .addComponent(testFileLabel))
+                    .addComponent(testFileLabel)
+                    .addComponent(weightLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -177,12 +192,13 @@ public class NeuralNetwork extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(openFile)
                             .addComponent(openTestSetButton)
-                            .addComponent(testButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(testButton)
+                            .addComponent(openWeightsButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(trainingFileLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(testFileLabel)
-                        .addGap(10, 10, 10)
+                        .addGap(15, 15, 15)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(learningRateLabel))
@@ -197,7 +213,9 @@ public class NeuralNetwork extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(performNetworkButton)
                     .addComponent(randomBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(weightLabel)
+                .addGap(13, 13, 13)
                 .addComponent(printButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -222,6 +240,11 @@ public class NeuralNetwork extends javax.swing.JFrame {
     private void testButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testButtonActionPerformed
 
         calculatePerfectFire(testList, NeuronList);
+        try {
+            writeFile(NeuronList);
+        } catch (IOException ex) {
+            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_testButtonActionPerformed
 
     private void openTestSetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTestSetButtonActionPerformed
@@ -240,7 +263,6 @@ public class NeuralNetwork extends javax.swing.JFrame {
                 Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
             }
             //printInput(testList);
-            testButton.setEnabled(true);
         }
     }//GEN-LAST:event_openTestSetButtonActionPerformed
 
@@ -277,16 +299,43 @@ public class NeuralNetwork extends javax.swing.JFrame {
             try {
                 // input in stuff
                 readFile(selectedFile, InputList);
-
             } catch (IOException ex) {
                 Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
             }
             printButton.setEnabled(true);
             performNetworkButton.setEnabled(true);
             openTestSetButton.setEnabled(true);
+            openWeightsButton.setEnabled(false);
             
         }
     }//GEN-LAST:event_openFileActionPerformed
+
+    private void openWeightsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openWeightsButtonActionPerformed
+        // TODO add your handling code here:
+        int returnVal = fc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            // clear the list for new file
+            selectedFile  = fc.getSelectedFile();
+            sFile = selectedFile.toString();
+            testButton.setEnabled(true);
+            weightLabel.setText("Weight File: " +  sFile);
+            try {
+                // input in stuff
+                addNeurons();
+                setWeights(selectedFile, NeuronList);
+                weightsLoaded = true;
+                testButton.setEnabled(true);
+                openFile.setEnabled(false);
+                openTestSetButton.setEnabled(true);
+            performNetworkButton.setEnabled(true);
+
+            } catch (IOException ex) {
+                Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+    }//GEN-LAST:event_openWeightsButtonActionPerformed
 
     public static void main(String args[]) {
 
@@ -341,6 +390,39 @@ public class NeuralNetwork extends javax.swing.JFrame {
         }
         fileStream.close();
         //out.close();
+    }
+    
+    public void setWeights(File Selected, List<Neuron> n)throws IOException{
+        Iterator iter = n.iterator();
+        int i = 0;
+        Scanner scan = new Scanner(Selected);
+        double latWeight = 0.0, lonWeight = 0.0;
+        String loca = "";
+        int theCount=0;
+        while(scan.hasNext()){
+            if(theCount == 0)
+                latWeight = scan.nextDouble();
+            else if(theCount == 1)
+                lonWeight = scan.nextDouble();
+            else if(theCount == 2){
+                loca = scan.next();
+            }
+            
+            theCount++;
+            if(theCount > 2){
+                theCount = 0;
+                iter = n.iterator();
+                i = 0;
+            }
+            while(iter.hasNext()){
+                if (n.get(i).getLocation().equals(loca)){
+                    n.get(i).setLatitudeWeight(latWeight);
+                    n.get(i).setLongitudeWeight(lonWeight);
+                }
+                iter.next();
+                i++;
+            }
+        }
     }
     
     // reads in the file for 
@@ -655,6 +737,7 @@ public class NeuralNetwork extends javax.swing.JFrame {
     private javax.swing.JLabel learningRateLabel;
     private javax.swing.JButton openFile;
     private javax.swing.JButton openTestSetButton;
+    private javax.swing.JButton openWeightsButton;
     private javax.swing.JButton performNetworkButton;
     private javax.swing.JButton printButton;
     private javax.swing.JCheckBox randomBox;
@@ -665,5 +748,6 @@ public class NeuralNetwork extends javax.swing.JFrame {
     private javax.swing.JTextField thresholdField;
     private javax.swing.JLabel thresholdLabel;
     private javax.swing.JLabel trainingFileLabel;
+    private javax.swing.JLabel weightLabel;
     // End of variables declaration//GEN-END:variables
 }

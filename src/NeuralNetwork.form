@@ -76,9 +76,12 @@
                           <Component id="openFile" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="openTestSetButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="openWeightsButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="trainingFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="testFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="weightLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -94,12 +97,13 @@
                               <Component id="openFile" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="openTestSetButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="testButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="openWeightsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="trainingFileLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="testFileLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="learningRateField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="learningRateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -119,7 +123,9 @@
                       <Component id="performNetworkButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="randomBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="37" max="32767" attributes="0"/>
+                  <EmptySpace pref="10" max="32767" attributes="0"/>
+                  <Component id="weightLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                   <Component id="printButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="scrollPane" min="-2" pref="212" max="-2" attributes="0"/>
@@ -232,6 +238,19 @@
         <Component class="javax.swing.JLabel" name="testFileLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Test file: "/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="openWeightsButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Open Weights File"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openWeightsButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="weightLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Weights File:"/>
           </Properties>
         </Component>
       </SubComponents>
